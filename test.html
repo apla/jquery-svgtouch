@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="./jquery-svgpan.js"></script>
+  <script src="./magictouch.js"></script>
+</head>
+<body style="overflow: hidden; margin: 0;">
+  <object id="tuio" type="application/x-tuio" style="width: 0px; height: 0px; position: absolute;">
+    Touch input plugin failed to load!
+  </object>
+
+  <svg id="bluebox" style="background: #eee;">
+    <g id="viewport" style="fill: blue;">
+      <rect width="300" height="300"/>
+    </g>
+  </svg>
+
+  <script type="text/javascript">
+    $('#bluebox').svgPan('viewport');
+  </script>
+</body>
+</html>
