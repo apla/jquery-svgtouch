@@ -15,6 +15,13 @@ Currently library has been tested only on Chrome desktop browser (Mac). I guess,
 
 The support is provided as is, without any guarantee.
 
+### Features
+
+* Touch panning
+* Multi-Touch zooming (using two figer pinch to zoom gesture)
+
+Thanks to great Andrea's code all touch and mouse events can be fired interchangeably. Handling these events is stateless - we are not storing current position or scale paramaters in temporary variables.
+
 ### Test
 
 If you don't have a multi-touch device but you have a one of recent MacBook notebooks you can use a trackpad in your computer to emulate multi-touch events. For details, read bottom of [this][] article.
