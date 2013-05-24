@@ -238,19 +238,21 @@
                   // case so store copy of all of them for future reference
                   // in pinching (zooming) functionality.
                   if (touches.length >= 2) {
-                    touches.forEach(function (touch) {
-                      var found = false;
-                      startTouches.forEach(function (startTouch) {
+                    for (var i = 0; i < touches.length; i++) {
+                      var touch = touches[i]
+                        , found = false;
+                      for (var j = 0; j < startTouches.length; j++) {
+                        var startTouch = startTouches[j];
                         if (touch.identifier === startTouch.identifier) {
                           found = true;
-                          return;
+                          break;
                         }
-                      });
+                      }
                       if (!found) {
                         var touchCopy = $.extend({}, touch);
                         startTouches.push(touchCopy);
                       }
-                    });
+                    }
                   }
 
                   evt.preventDefault();
@@ -262,14 +264,18 @@
                 handleTouchEnd = function (evt) {
                   // Remove ending touches from internal helper collection
                   // related to pinch to zoom gesture.
-                  evt.changedTouches.forEach(function (changedTouch) {
-                    startTouches.forEach(function (startTouch) {
+                  var changedTouches = evt.changedTouches;
+
+                  for (var i = 0; i < changedTouches.length; i++) {
+                    var changedTouch = changedTouches[i];
+                    for (var j = 0; j < startTouches.length; j++) {
+                      var startTouch = startTouches[j];
                       if (startTouch.identifier === changedTouch.identifier) {
                         var idx = startTouches.indexOf(startTouch);
                         startTouches.splice(idx, 1);
                       }
-                    });
-                  });
+                    }
+                  }
 
                   evt.preventDefault();
                 },
