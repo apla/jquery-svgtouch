@@ -1,9 +1,9 @@
-# jQuery SVGPan Multi-Touch
+# jQuery SVGTouch
 
 This is an an adaptation of Andrea Leofreddi's [SVGPan library][],
 version 1.2.2, for use as a [jQuery][] plugin.
 
-Additionally, this version of library supports multi-touch gestures (inspired by another pretty neat library [Hammer.js][]).
+Additionally, this version of library supports multi-touch gestures (inspired by another pretty neat library called [Hammer.js][]).
 
  [SVGPan library]: http://code.google.com/p/svgpan/
  [jQuery]: http://jquery.org/
