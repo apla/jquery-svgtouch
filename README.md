@@ -11,7 +11,12 @@ Additionally, this version of library supports multi-touch gestures (inspired by
 
 ### Device Support
 
-Currently library has been tested only on Chrome desktop browser (Mac). I guess, there could be some issues running it on other platforms, especially on mobile phones.
+* Chrome desktop for Mac (tested via [MagicTouch][])
+* Chrome desktop for Windows 8
+
+ [MagicTouch]: https://github.com/borismus/MagicTouch
+
+As long as library uses standard browser touch event callbacks it should also work in other browsers and platform. However, none of other test has been made yet and I guess there always could be some issues running it in other environments, especially on mobile phones.
 
 The support is provided as is, without any guarantee.
 
@@ -48,6 +53,11 @@ Arguments:
 ```javascript
     $('#svgId').svgPan('viewport');
 ```
+
+### TODO
+
+* Enhance precision of recognized gestures (this is especially true for pinch to zoom gesture which can be accidentally applied too fast)
+* Add support for panning while simultaneously zooming (currently you can't pan your graphic while zooming)
 
 ### Links
 
