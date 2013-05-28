@@ -166,29 +166,29 @@
                  * Update touch coordinates based on some other touch coordinates.
                  */
                 updateTouch = function (dstTouch, srcTouch) {
-                  dstTouch.pageX = srcTouch.pageX;
-                  dstTouch.pageY = srcTouch.pageY;
+                    dstTouch.pageX = srcTouch.pageX;
+                    dstTouch.pageY = srcTouch.pageY;
                 },
 
                 /**
                  * Instance an SVGPoint object with given touch event coordinates.
                  */
                 getTouchEventPoint = function (evt) {
-                  var p = root.createSVGPoint(),
-                      targetTouches = evt.targetTouches,
-                      offsetX,
-                      offsetY;
+                    var p = root.createSVGPoint(),
+                        targetTouches = evt.targetTouches,
+                        offsetX,
+                        offsetY;
 
-                  if (targetTouches.length) {
-                    var touch = targetTouches[0];
-                    offsetX = touch.pageX;
-                    offsetY = touch.pageY;
-                  }
+                    if (targetTouches.length) {
+                        var touch = targetTouches[0];
+                        offsetX = touch.pageX;
+                        offsetY = touch.pageY;
+                    }
 
-                  p.x = offsetX;
-                  p.y = offsetY;
+                    p.x = offsetX;
+                    p.y = offsetY;
 
-                  return p;
+                    return p;
                 },
 
                 /**
@@ -227,109 +227,108 @@
                  * Handle touch start event.
                  */
                 handleTouchStart = function (evt) {
-                  var g = svgRoot;
+                    var g = svgRoot;
 
-                  stateTf = g.getCTM().inverse();
+                    stateTf = g.getCTM().inverse();
 
-                  stateOrigin = getTouchEventPoint(evt).matrixTransform(stateTf);
+                    stateOrigin = getTouchEventPoint(evt).matrixTransform(stateTf);
 
-                  var touches = evt.touches;
-                  // Check if there are two or more touches (fingers) and in
-                  // case so store copy of all of them for future reference
-                  // in pinching (zooming) functionality.
-                  if (touches.length >= 2) {
-                    for (var i = 0; i < touches.length; i++) {
-                      var touch = touches[i]
-                        , found = false;
-                      for (var j = 0; j < startTouches.length; j++) {
-                        var startTouch = startTouches[j];
-                        if (touch.identifier === startTouch.identifier) {
-                          found = true;
-                          break;
+                    var touches = evt.touches;
+                    // Check if there are two or more touches (fingers) and in
+                    // case so store copy of all of them for future reference
+                    // in pinching (zooming) functionality.
+                    if (touches.length >= 2) {
+                        for (var i = 0; i < touches.length; i++) {
+                            var touch = touches[i]
+                              , found = false;
+                            for (var j = 0; j < startTouches.length; j++) {
+                                var startTouch = startTouches[j];
+                                if (touch.identifier === startTouch.identifier) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                var touchCopy = $.extend({}, touch);
+                                startTouches.push(touchCopy);
+                            }
                         }
-                      }
-                      if (!found) {
-                        var touchCopy = $.extend({}, touch);
-                        startTouches.push(touchCopy);
-                      }
                     }
-                  }
 
-                  evt.preventDefault();
+                    evt.preventDefault();
                 },
 
                 /**
                  * Handle touch end event.
                  */
                 handleTouchEnd = function (evt) {
-                  // Remove ending touches from internal helper collection
-                  // related to pinch to zoom gesture.
-                  var changedTouches = evt.changedTouches;
+                    // Remove ending touches from internal helper collection
+                    // related to pinch to zoom gesture.
+                    var changedTouches = evt.changedTouches;
 
-                  for (var i = 0; i < changedTouches.length; i++) {
-                    var changedTouch = changedTouches[i];
-                    for (var j = 0; j < startTouches.length; j++) {
-                      var startTouch = startTouches[j];
-                      if (startTouch.identifier === changedTouch.identifier) {
-                        var idx = startTouches.indexOf(startTouch);
-                        startTouches.splice(idx, 1);
-                      }
+                    for (var i = 0; i < changedTouches.length; i++) {
+                        var changedTouch = changedTouches[i];
+                        for (var j = 0; j < startTouches.length; j++) {
+                            var startTouch = startTouches[j];
+                            if (startTouch.identifier === changedTouch.identifier) {
+                                var idx = startTouches.indexOf(startTouch);
+                                startTouches.splice(idx, 1);
+                            }
+                        }
                     }
-                  }
 
-                  evt.preventDefault();
+                    evt.preventDefault();
                 },
 
                 /**
                  * Handle touch move event.
                  */
                 handleTouchMove = function (evt) {
-                  evt.preventDefault();
+                    evt.preventDefault();
 
-                  var g = svgRoot,
-                      touches = evt.touches,
-                      z,
-                      p,
-                      k;
+                    var g = svgRoot,
+                        touches = evt.touches,
+                        z,
+                        p,
+                        k;
 
-                  // Handle zoom while 2 fingers
-                  if (touches.length >= 2 && enableZoom) {
-                    var touch0 = touches[0]
-                      , touch1 = touches[1];
+                    // Handle zoom while 2 fingers
+                    if (touches.length >= 2 && enableZoom) {
+                        var touch0 = touches[0]
+                          , touch1 = touches[1]
+                          , startTouch0 = startTouches[0]
+                          , startTouch1 = startTouches[1];
 
-                    var startTouch0 = startTouches[0];
-                    var startTouch1 = startTouches[1];
+                        z = getDistance(touch0, touch1) / getDistance(startTouch0, startTouch1);
 
-                    z = getDistance(touch0, touch1) / getDistance(startTouch0, startTouch1);
+                        p = root.createSVGPoint();
+                        p.x = (touch0.pageX + touch1.pageX) / 2;
+                        p.y = (touch0.pageY + touch1.pageY) / 2;
 
-                    p = root.createSVGPoint();
-                    p.x = (touch0.pageX + touch1.pageX) / 2;
-                    p.y = (touch0.pageY + touch1.pageY) / 2;
+                        p = p.matrixTransform(g.getCTM().inverse());
 
-                    p = p.matrixTransform(g.getCTM().inverse());
+                        // Compute new scale matrix in current mouse position
+                        k = root.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
 
-                    // Compute new scale matrix in current mouse position
-                    k = root.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
+                        setCTM(g, g.getCTM().multiply(k));
 
-                    setCTM(g, g.getCTM().multiply(k));
+                        if (typeof stateTf === "undefined") {
+                            stateTf = g.getCTM().inverse();
+                        }
 
-                    if (typeof stateTf === "undefined") {
-                        stateTf = g.getCTM().inverse();
+                        stateTf = stateTf.multiply(k.inverse());
+
+                        // Update future starting touch coordinates with present
+                        // values.
+                        updateTouch(startTouch0, touch0);
+                        updateTouch(startTouch1, touch1);
+                    } else if (!startTouches.length && enablePan) {
+                        // Panning is disabled while simultaneously pinch to
+                        // zoom gesture is activated.
+                        p = getTouchEventPoint(evt).matrixTransform(stateTf);
+
+                        setCTM(g, stateTf.inverse().translate(p.x - stateOrigin.x, p.y - stateOrigin.y));
                     }
-
-                    stateTf = stateTf.multiply(k.inverse());
-
-                    // Update future starting touch coordinates with present
-                    // values.
-                    updateTouch(startTouch0, touch0);
-                    updateTouch(startTouch1, touch1);
-                  } else if (!startTouches.length && enablePan) {
-                    // Panning is disabled while simultaneously pinch to
-                    // zoom gesture is activated.
-                    p = getTouchEventPoint(evt).matrixTransform(stateTf);
-
-                    setCTM(g, stateTf.inverse().translate(p.x - stateOrigin.x, p.y - stateOrigin.y));
-                  }
                 },
 
                 /**
